@@ -1,0 +1,39 @@
+MODULE_NAME = main
+
+PROJECT_ROOT_DIR = ..
+PROJECT_BUILD_DIR = $(PROJECT_ROOT_DIR)/build
+LIB_APP_DIRECTORY = $(PROJECT_BUILD_DIR)/app/lib/static/
+
+MODULE_DIR = $(PROJECT_BUILD_DIR)/$(MODULE_NAME)
+MODULE_OBJ_DIR = $(MODULE_DIR)/obj
+MODULE_BINARY_DIR = $(MODULE_DIR)/bin
+
+TARGET = $(MODULE_BINARY_DIR)/$(MODULE_NAME)
+MODULE_OBJ_1 = $(MODULE_OBJ_DIR)/$(MODULE_NAME).o
+MODULE_SRC_1 = $(MODULE_NAME).c
+
+
+CFLAGS = -Wall -Werror
+LINKER_FLAGS = -L$(LIB_APP_DIRECTORY) -lapp -lusb-1.0
+INCLUDE_FLAGS = -I$(PROJECT_ROOT_DIR)/src/app/include
+
+CC = /usr/bin/gcc
+
+all: module
+
+module: prepare $(TARGET)
+
+
+$(TARGET): $(MODULE_OBJ_1)
+	$(CC) $(CFLAGS) $< $(LINKER_FLAGS) -o $@
+
+$(MODULE_OBJ_1): $(MODULE_SRC_1)
+	$(CC) $(CFLAGS) $(INCLUDE_FLAGS) -c $< -o $@
+
+
+
+prepare:
+	mkdir -p $(MODULE_DIR) $(MODULE_OBJ_DIR) $(MODULE_BINARY_DIR)
+
+clean:
+	rm -rf $(MODULE_DIR)
